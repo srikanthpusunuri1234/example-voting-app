@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: result
+      annotations:
+        instrumentation.opentelemetry.io/inject-nodejs: "true"
     spec:
       containers:
       - image: psrikanth057/result:latest
