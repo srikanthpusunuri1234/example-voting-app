@@ -17,6 +17,10 @@ spec:
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
+    - name: KUBE_NODE_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.hostIP
 
   volumeMounts:
     - name: varlogpods
@@ -50,7 +54,7 @@ spec:
 
         auth_type: serviceAccount
 
-        endpoint: https://${env:KUBE_NODE_NAME}:10250
+        endpoint: https://${env:KUBE_NODE_IP}:10250
 
         insecure_skip_verify: true
 
@@ -92,8 +96,8 @@ spec:
       prometheus:
         endpoint: "0.0.0.0:8889"
 
-      loki:
-        endpoint: http://loki.observability.svc.cluster.local:3100/loki/api/v1/push
+      otlphttp/loki:
+        endpoint: http://loki.observability.svc.cluster.local:3100/otlp
 
     service:
 
@@ -109,7 +113,7 @@ spec:
 
           exporters:
             - debug
-            - loki
+            - otlphttp/loki
 
         metrics:
           receivers:
