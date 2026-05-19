@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app: worker
+      annotations:
+        instrumentation.opentelemetry.io/inject-nodjs: "true"
     spec:
       containers:
       - image: psrikanth057/worker:latest
