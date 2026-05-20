@@ -43,13 +43,18 @@ spec:
     receivers:
 
       filelog:
-
         include:
           - /var/log/containers/*.log
+
+        exclude:
+          - /var/log/containers/infra-collector*.log
 
         start_at: beginning
 
         include_file_path: true
+
+        operators:
+          - type: container
 
       kubeletstats:
 
