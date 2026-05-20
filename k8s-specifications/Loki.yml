@@ -19,16 +19,30 @@ spec:
 
     spec:
       containers:
-      - name: loki
+        - name: loki
 
-        image: grafana/loki:latest
+          image: grafana/loki:latest
 
-        args:
-        - -config.file=/etc/loki/local-config.yaml
+          args:
+            - -config.file=/etc/loki/local-config.yaml
 
-        ports:
-        - containerPort: 3100
+          ports:
+            - containerPort: 3100
 
+          volumeMounts:
+            - name: loki-config
+              mountPath: /etc/loki
+
+            - name: loki-storage
+              mountPath: /loki
+
+      volumes:
+        - name: loki-config
+          configMap:
+            name: loki-config
+
+        - name: loki-storage
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
@@ -42,5 +56,5 @@ spec:
     app: loki
 
   ports:
-  - port: 3100
-    targetPort: 3100
+    - port: 3100
+      targetPort: 3100
