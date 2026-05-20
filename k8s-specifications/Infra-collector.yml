@@ -51,10 +51,6 @@ spec:
 
         include_file_path: true
 
-        operators:
-
-          - type: container
-
       kubeletstats:
 
         collection_interval: 20s
