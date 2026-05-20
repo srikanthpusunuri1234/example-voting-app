@@ -43,19 +43,3 @@ subjects:
 - kind: ServiceAccount
   name: default
   namespace: observability
-root@controlplane:~/example-voting-app/k8s-specifications$ cat Infra-collector.yml 
-apiVersion: opentelemetry.io/v1beta1
-kind: OpenTelemetryCollector
-
-metadata:
-  name: infra
-  namespace: observability
-
-spec:
-  mode: daemonset
-
-  serviceAccount: default
-
-  image: otel/opentelemetry-collector-contrib:latest
-
-  env:
