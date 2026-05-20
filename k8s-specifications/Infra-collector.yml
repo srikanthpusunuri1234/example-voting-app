@@ -8,11 +8,12 @@ metadata:
 spec:
   mode: daemonset
 
-  serviceAccount: default
+  serviceAccount: infra-collector
 
   image: otel/opentelemetry-collector-contrib:latest
 
   env:
+
     - name: KUBE_NODE_IP
       valueFrom:
         fieldRef:
@@ -43,6 +44,7 @@ spec:
     receivers:
 
       filelog:
+
         include:
           - /var/log/containers/*.log
 
@@ -52,9 +54,6 @@ spec:
         start_at: beginning
 
         include_file_path: true
-
-        operators:
-          - type: container
 
       kubeletstats:
 
@@ -85,6 +84,8 @@ spec:
 
           network: {}
 
+          disk: {}
+
     processors:
 
       batch: {}
@@ -106,7 +107,8 @@ spec:
 
     exporters:
 
-      debug: {}
+      debug:
+        verbosity: basic
 
       prometheus:
         endpoint: "0.0.0.0:8889"
@@ -128,8 +130,8 @@ spec:
             - batch
 
           exporters:
-            - debug
             - otlphttp/loki
+            - debug
 
         metrics:
 
@@ -142,5 +144,5 @@ spec:
             - batch
 
           exporters:
-            - debug
             - prometheus
+            - debug
