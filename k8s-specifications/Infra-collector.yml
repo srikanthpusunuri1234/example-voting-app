@@ -13,43 +13,50 @@ spec:
   image: otel/opentelemetry-collector-contrib:latest
 
   env:
-    - name: KUBE_NODE_NAME
-      valueFrom:
-        fieldRef:
-          fieldPath: spec.nodeName
     - name: KUBE_NODE_IP
       valueFrom:
         fieldRef:
           fieldPath: status.hostIP
 
   volumeMounts:
+
     - name: varlogpods
       mountPath: /var/log/pods
       readOnly: true
 
-    - name: varlibdockercontainers
-      mountPath: /var/lib/docker/containers
+    - name: varlogcontainers
+      mountPath: /var/log/containers
       readOnly: true
 
   volumes:
+
     - name: varlogpods
       hostPath:
         path: /var/log/pods
 
-    - name: varlibdockercontainers
+    - name: varlogcontainers
       hostPath:
-        path: /var/lib/docker/containers
+        path: /var/log/containers
 
   config:
+
     receivers:
 
       filelog:
+
         include:
-          - /var/log/pods/*/*/*.log
+          - /var/log/containers/*.log
 
         start_at: beginning
 
+        include_file_path: true
+
+        operators:
+
+          - type: container
+
       kubeletstats:
+
         collection_interval: 20s
 
         auth_type: serviceAccount
@@ -64,12 +71,17 @@ spec:
           - container
 
       hostmetrics:
+
         collection_interval: 20s
 
         scrapers:
+
           cpu: {}
+
           memory: {}
+
           filesystem: {}
+
           network: {}
 
     processors:
@@ -77,11 +89,13 @@ spec:
       batch: {}
 
       k8sattributes:
+
         auth_type: serviceAccount
 
         passthrough: false
 
         extract:
+
           metadata:
             - k8s.namespace.name
             - k8s.pod.name
@@ -104,6 +118,7 @@ spec:
       pipelines:
 
         logs:
+
           receivers:
             - filelog
 
@@ -116,6 +131,7 @@ spec:
             - otlphttp/loki
 
         metrics:
+
           receivers:
             - kubeletstats
             - hostmetrics
