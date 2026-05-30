@@ -112,6 +112,8 @@ spec:
 
       prometheus:
         endpoint: "0.0.0.0:8889"
+        resource_to_telemetry_conversion:
+          enabled: true
 
       otlphttp/loki:
         endpoint: http://loki.observability.svc.cluster.local:3100/otlp
@@ -140,7 +142,6 @@ spec:
             - hostmetrics
 
           processors:
-            - k8sattributes
             - batch
 
           exporters:
