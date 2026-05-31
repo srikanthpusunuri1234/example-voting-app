@@ -54,6 +54,8 @@ spec:
         start_at: beginning
 
         include_file_path: true
+        operators: 
+           - type: container
 
       kubeletstats:
 
