@@ -46,7 +46,7 @@ spec:
       filelog:
 
         include:
-          - /var/log/pods/*/*/*.log
+          - /var/log/containers/*.log
 
         exclude:
           - /var/log/containers/infra-collector*.log
@@ -95,21 +95,6 @@ spec:
         auth_type: serviceAccount
 
         passthrough: false
-
-        pod_association:
-
-          - sources:
-      
-              - from: resource_attribute
-                name: k8s.pod.uid
-      
-          - sources:
-      
-              - from: resource_attribute
-                name: k8s.pod.name
-      
-              - from: resource_attribute
-                name: k8s.namespace.name
 
         extract:
 
