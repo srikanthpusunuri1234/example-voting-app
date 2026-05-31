@@ -1,0 +1,29 @@
+clickhouse:
+  enabled: true
+  persistence:
+    size: 100Gi
+    storageClassName: "gp3" # Optimized AWS storage
+  resources:
+    requests:
+      cpu: "2"
+      memory: "4Gi"
+    limits:
+      cpu: "4"
+      memory: "8Gi"
+
+mongodb:
+  enabled: true
+  persistence:
+    size: 20Gi
+    storageClassName: "gp3"
+
+hyperdx:
+  enabled: true
+  apiKey: "super-secure-otel-ingest-token-123"
+  # Override the internal service configuration to use a NodePort structure
+  service:
+    type: NodePort
+    ports:
+      ui:
+        port: 8080
+        nodePort: 32000 # Direct external portal access port

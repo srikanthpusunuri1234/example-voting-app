@@ -1,0 +1,39 @@
+apiVersion: opentelemetry.io/v1beta1
+kind: OpenTelemetryCollector
+metadata:
+  name: otel
+  namespace: observability
+spec:
+  mode: deployment
+  image: otel/opentelemetry-collector-contrib:latest
+  config:
+    receivers:
+      otlp:
+        protocols:
+          grpc: {}
+          http: {}
+    processors:
+      batch:
+        send_batch_size: 10000
+        timeout: 5s
+    exporters:
+      otlp:
+        endpoint: clickstack-hyperdx-app.observability.svc.cluster.local:4317
+        tls:
+          insecure: true
+        headers:
+          authorization: "super-secure-otel-ingest-token-123"
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [otlp]
